@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import time
+import requests
+import os
 from PIL import Image
 
 # Sayfa Ayarları
@@ -30,9 +32,31 @@ sekme = st.sidebar.radio("Analiz Menüsü", [
 ])
 
 if sekme == "🚨 Canlı Tehdit Akışı":
-    st.subheader("Gerçek Zamanlı AI Alarmları")
-    st.write("Yapay zeka modelinin ağ trafiğinde yakaladığı son anomaliler:")
+    st.subheader("🚨 Canlı Saldırı Bildirimleri")
     
+    # 1. Ubuntu Üzerinden Canlı Veri Çekimi
+    try:
+        response = requests.get("http://10.34.11.24:8000/alarms.json", timeout=3)
+        
+        if response.status_code == 200:
+            alarmlar = response.json()
+            if alarmlar:
+                # Sadece son 10 alarmı gösterelim
+                for alarm in reversed(alarmlar[-10:]):
+                    # Şifre maskeleme işlemi
+                    st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')}")
+            else:
+                st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
+        else:
+             st.info("Sistem dinleniyor...")
+    except requests.exceptions.RequestException:
+        st.warning("Ubuntu veri köprüsü (port 8000) bekleniyor...")
+
+    st.markdown("---")
+    st.subheader("Geçmiş AI Alarmları (CSV Verisi)")
+    st.write("Yapay zeka modelinin ağ trafiğinde yakaladığı önceki anomaliler:")
+    
+    # 2. Önceki animasyonlu veri yapısı (df_risk)
     st.markdown("""
     <style>
     .yeni-etiket {
@@ -72,13 +96,6 @@ if sekme == "🚨 Canlı Tehdit Akışı":
         
         gosterilen_alarmlar.insert(0, veri)
         
-        # HTML etiketlerinin başındaki boşluklar tamamen kaldırıldı
-        # ONEMLI: her yeni bildirim icin BENZERSIZ ISIMLI @keyframes
-        # tanimliyoruz (slideIn_0, slideIn_1, slideIn_2, ...). Onceki
-        # denemede aynı animasyon adini kucuk bir sure farkiyla yeniden
-        # kullanmak yeterli olmadi - tarayici/Streamlit hala "ayni"
-        # sayabiliyordu. Ismin TAMAMEN farkli olmasi, karistirma
-        # ihtimalini sifirliyor.
         benzersiz_stil = f"""<style>
 @keyframes slideIn_{i} {{
     0% {{ transform: translateX(60px) scale(0.95); opacity: 0; }}
@@ -119,6 +136,10 @@ if sekme == "🚨 Canlı Tehdit Akışı":
         time.sleep(0.5)
         
     durum_alani.success("✅ Tüm kuyruk incelendi. Sistem güvende.")
+
+    # Yalnızca "Canlı Tehdit Akışı" sekmesindeyken sayfayı 5 saniyede bir yeniler
+    time.sleep(5)
+    st.rerun()
     
 elif sekme == "📊 Risk Skorları":
     st.subheader("Yapay Zeka Tehdit Önceliklendirme Tablosu")
@@ -146,7 +167,6 @@ elif sekme == "🧠 Açıklanabilir AI (XAI)":
     st.write("Sistemimiz bir kara kutu değildir. Aşağıdaki grafik, modelin bir IP'yi neden 'saldırgan' olarak işaretlediğini (hız, hacim veya kritik hedef seçimi) kanıtlamaktadır.")
     
     try:
-        # İsimlendirmeyi 6 olarak güncellediğin için burada o şekilde çağırıyoruz
         st.image(Image.open("gorsel_6_xai_faktörleri.png"), use_container_width=True)
     except:
         st.warning("gorsel_6_xai_faktörleri.png dosyası bulunamadı.")
