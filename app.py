@@ -143,7 +143,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
     
 elif sekme == "📊 Risk Skorları":
     st.subheader("Yapay Zeka Tehdit Önceliklendirme Tablosu")
-   st.dataframe(df_risk, use_container_width=True, height=300)
+    st.dataframe(df_risk, use_container_width=True, height=300)
     
     try:
         st.image(Image.open("gorsel_5_risk_skorlari.png"), caption="Risk Skoru Sıralaması")
