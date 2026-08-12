@@ -36,7 +36,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
     
     # 1. Ubuntu Üzerinden Canlı Veri Çekimi
     try:
-        response = requests.get(" https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", timeout=3)
+        response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", timeout=3)
         
         if response.status_code == 200:
             alarmlar = response.json()
