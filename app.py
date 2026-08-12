@@ -43,8 +43,10 @@ if sekme == "🚨 Canlı Tehdit Akışı":
             if alarmlar:
                 # Sadece son 10 alarmı gösterelim
                 for alarm in reversed(alarmlar[-10:]):
-                    # Şifre maskeleme işlemi
-                    st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')}")
+    if alarm.get('type') == 'INFO':
+        st.success(f"**Yetkili Giriş:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} (Başarılı Oturum)")
+    else:
+        st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')}")
             else:
                 st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
         else:
