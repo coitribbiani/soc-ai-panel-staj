@@ -26,6 +26,7 @@ if df_risk is None:
 # Sol Menü
 sekme = st.sidebar.radio("Analiz Menüsü", [
     "🚨 Canlı Tehdit Akışı", 
+    "📂 Geçmiş AI Alarmları", 
     "📊 Risk Skorları", 
     "📈 Analiz Grafikleri",
     "🧠 Açıklanabilir AI (XAI)"
@@ -34,15 +35,12 @@ sekme = st.sidebar.radio("Analiz Menüsü", [
 if sekme == "🚨 Canlı Tehdit Akışı":
     st.subheader("🚨 Canlı Saldırı Bildirimleri")
     
-    # 1. Ubuntu Üzerinden Canlı Veri Çekimi
+    # Ubuntu Üzerinden Canlı Veri Çekimi
     try:
         response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", timeout=3)
-        
         if response.status_code == 200:
             alarmlar = response.json()
             if alarmlar:
-                # Sadece son 10 alarmı gösterelim
-                # Sadece son 10 alarmı gösterelim
                 for alarm in reversed(alarmlar[-10:]):
                     kaynak = alarm.get('kaynak', 'Bilinmiyor')
                     if alarm.get('type') == 'INFO':
@@ -51,10 +49,32 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                         st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
             else:
                 st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
-        else:
-             st.info("Sistem dinleniyor...")
     except requests.exceptions.RequestException:
         st.warning("Ubuntu veri köprüsü (port 8000) bekleniyor...")
+
+    time.sleep(5)
+    st.rerun()
+
+    elif sekme == "📂 Geçmiş AI Alarmları":
+    st.subheader("📂 Geçmiş AI Alarmları (CSV Verisi)")
+    st.write("Yapay zeka modelinin ağ trafiğinde yakaladığı önceki anomaliler:")
+    
+    # CSS ve döngü kodlarını buraya alıyoruz
+    st.markdown("""
+    <style>
+    .yeni-etiket { display: inline-block; background-color: #ff4b4b; color: white; font-size: 11px; font-weight: bold; padding: 1px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
+    .akis-kutusu::-webkit-scrollbar { width: 6px; }
+    .akis-kutusu::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    akis_alani = st.empty()
+    gosterilen_alarmlar = []
+    
+    for i in range(len(df_risk)):
+        satir = df_risk.iloc[i]
+        # ... (Önceki kodundaki for döngüsü ve HTML oluşturma kısmı burada kalacak) ...
+        # [Kodun bu kısmına dokunmana gerek yok, sadece yukarıdaki 'elif' altına taşıman yeterli]
 
     st.markdown("---")
     st.subheader("Geçmiş AI Alarmları (CSV Verisi)")
