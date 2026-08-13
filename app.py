@@ -57,7 +57,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
 
 elif sekme == "📂 Geçmiş AI Alarmları":
     st.subheader("📂 Geçmiş AI Alarmları (CSV Verisi)")
-    st.write("Yapay zeka modelinin ağ trafiğinde yakaladığı önceki anomaliler:")
+    
     
     # CSS ve döngü kodlarını buraya alıyoruz
     st.markdown("""
