@@ -55,7 +55,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
     time.sleep(5)
     st.rerun()
 
-    elif sekme == "📂 Geçmiş AI Alarmları":
+elif sekme == "📂 Geçmiş AI Alarmları":
     st.subheader("📂 Geçmiş AI Alarmları (CSV Verisi)")
     st.write("Yapay zeka modelinin ağ trafiğinde yakaladığı önceki anomaliler:")
     
