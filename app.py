@@ -42,11 +42,13 @@ if sekme == "🚨 Canlı Tehdit Akışı":
             alarmlar = response.json()
             if alarmlar:
                 # Sadece son 10 alarmı gösterelim
+                # Sadece son 10 alarmı gösterelim
                 for alarm in reversed(alarmlar[-10:]):
+                    kaynak = alarm.get('kaynak', 'Bilinmiyor')
                     if alarm.get('type') == 'INFO':
-                        st.success(f"**Yetkili Giriş:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} (Başarılı Oturum)")
+                        st.success(f"**Yetkili Giriş:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Hedef:** {kaynak} (Başarılı Oturum)")
                     else:
-                        st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')}")
+                        st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
             else:
                 st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
         else:
