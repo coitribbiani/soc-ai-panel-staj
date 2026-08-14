@@ -35,10 +35,11 @@ sekme = st.sidebar.radio("Analiz Menüsü", [
 if sekme == "🚨 Canlı Tehdit Akışı":
     st.subheader("🚨 Canlı Saldırı Bildirimleri")
     
-    # Doğrudan yerel JSON dosyasını oku (Ngrok yerine)
+   # Doğrudan yerel JSON dosyasını oku (Ngrok yerine)
     import json
     try:
-        with open("alarms.json", "r") as f:
+        # Tam dosya yolunu kullanıyoruz
+        with open("/home/mehmet/alarms.json", "r") as f:
             alarmlar = json.load(f)
             
         if alarmlar:
