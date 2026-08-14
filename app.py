@@ -43,12 +43,19 @@ if sekme == "🚨 Canlı Tehdit Akışı":
             if alarmlar:
                 for alarm in reversed(alarmlar[-10:]):
                     kaynak = alarm.get('kaynak', 'Bilinmiyor')
-                    durum = alarm.get('durum', alarm.get('type', ''))
                     
-                    if durum == 'Başarılı' or durum == 'INFO':
+                    # Logdan type bilgisini çekiyoruz (Yoksa boş döner)
+                    alarm_tipi = alarm.get('type', '')
+                    
+                    if alarm_tipi == 'INFO':
                         st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
-                    else:
+                    elif alarm_tipi == 'FAILED_LOGIN':
+                        st.warning(f"**🟠 Hatalı Giriş Denemesi (Tekil):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                    elif alarm_tipi == 'BRUTE_FORCE':
                         st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                    else:
+                        # Eski loglar veya beklenmeyen formatlar için varsayılan durum
+                        st.error(f"**🔴 Tanımlanamayan Tehdit Algılandı:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
             else:
                 st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
     except requests.exceptions.RequestException:
@@ -60,42 +67,9 @@ if sekme == "🚨 Canlı Tehdit Akışı":
 elif sekme == "📂 Geçmiş AI Alarmları":
     st.subheader("📂 Geçmiş AI Alarmları (CSV Verisi)")
     
-    
-    # CSS ve döngü kodlarını buraya alıyoruz
     st.markdown("""
     <style>
     .yeni-etiket { display: inline-block; background-color: #ff4b4b; color: white; font-size: 11px; font-weight: bold; padding: 1px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
-    .akis-kutusu::-webkit-scrollbar { width: 6px; }
-    .akis-kutusu::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    akis_alani = st.empty()
-    gosterilen_alarmlar = []
-    
-    for i in range(len(df_risk)):
-        satir = df_risk.iloc[i]
-        # ... (Önceki kodundaki for döngüsü ve HTML oluşturma kısmı burada kalacak) ...
-        # [Kodun bu kısmına dokunmana gerek yok, sadece yukarıdaki 'elif' altına taşıman yeterli]
-
-    st.markdown("---")
-    st.subheader("Geçmiş AI Alarmları (CSV Verisi)")
-    st.write("Yapay zeka modelinin ağ trafiğinde yakaladığı önceki anomaliler:")
-    
-    # 2. Önceki animasyonlu veri yapısı (df_risk)
-    st.markdown("""
-    <style>
-    .yeni-etiket {
-        display: inline-block;
-        background-color: #ff4b4b;
-        color: white;
-        font-size: 11px;
-        font-weight: bold;
-        padding: 1px 7px;
-        border-radius: 10px;
-        margin-left: 8px;
-        vertical-align: middle;
-    }
     .akis-kutusu::-webkit-scrollbar { width: 6px; }
     .akis-kutusu::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
     </style>
@@ -163,10 +137,6 @@ elif sekme == "📂 Geçmiş AI Alarmları":
         
     durum_alani.success("✅ Tüm kuyruk incelendi. Sistem güvende.")
 
-    # Yalnızca "Canlı Tehdit Akışı" sekmesindeyken sayfayı 5 saniyede bir yeniler
-    time.sleep(5)
-    st.rerun()
-    
 elif sekme == "📊 Risk Skorları":
     st.subheader("Yapay Zeka Tehdit Önceliklendirme Tablosu")
     st.dataframe(df_risk, use_container_width=True, height=300)
