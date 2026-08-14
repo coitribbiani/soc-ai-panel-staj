@@ -35,30 +35,24 @@ sekme = st.sidebar.radio("Analiz Menüsü", [
 if sekme == "🚨 Canlı Tehdit Akışı":
     st.subheader("🚨 Canlı Saldırı Bildirimleri")
     
-   # Doğrudan yerel JSON dosyasını oku (Ngrok yerine)
-    import json
+    # Ngrok üzerinden veriyi çekiyoruz
     try:
-        # Tam dosya yolunu kullanıyoruz
-        with open("/home/mehmet/alarms.json", "r") as f:
-            alarmlar = json.load(f)
-            
-        if alarmlar:
-            for alarm in reversed(alarmlar[-10:]):
-                kaynak = alarm.get('kaynak', 'Bilinmiyor')
-                durum = alarm.get('durum', alarm.get('type', ''))
-                
-                # Başarılı girişleri (sisteme sızılma) yeşil, başarısız denemeleri kırmızı göster
-                if durum == 'Başarılı' or durum == 'INFO':
-                    st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
-                else:
-                    st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
-        else:
-            st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
-            
-    except FileNotFoundError:
-        st.warning("alarms.json dosyası bekleniyor...")
-    except json.JSONDecodeError:
-        st.warning("Loglar okunurken hata oluştu.")
+        response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", timeout=3)
+        if response.status_code == 200:
+            alarmlar = response.json()
+            if alarmlar:
+                for alarm in reversed(alarmlar[-10:]):
+                    kaynak = alarm.get('kaynak', 'Bilinmiyor')
+                    durum = alarm.get('durum', alarm.get('type', ''))
+                    
+                    if durum == 'Başarılı' or durum == 'INFO':
+                        st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                    else:
+                        st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+            else:
+                st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
+    except requests.exceptions.RequestException:
+        st.warning("Ubuntu veri köprüsü (Ngrok) bekleniyor...")
 
     time.sleep(5)
     st.rerun()
