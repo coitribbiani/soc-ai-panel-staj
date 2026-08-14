@@ -35,22 +35,29 @@ sekme = st.sidebar.radio("Analiz Menüsü", [
 if sekme == "🚨 Canlı Tehdit Akışı":
     st.subheader("🚨 Canlı Saldırı Bildirimleri")
     
-    # Ubuntu Üzerinden Canlı Veri Çekimi
+    # Doğrudan yerel JSON dosyasını oku (Ngrok yerine)
+    import json
     try:
-        response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", timeout=3)
-        if response.status_code == 200:
-            alarmlar = response.json()
-            if alarmlar:
-                for alarm in reversed(alarmlar[-10:]):
-                    kaynak = alarm.get('kaynak', 'Bilinmiyor')
-                    if alarm.get('type') == 'INFO':
-                        st.success(f"**Yetkili Giriş:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Hedef:** {kaynak} (Başarılı Oturum)")
-                    else:
-                        st.error(f"**Tehdit Algılandı!** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
-            else:
-                st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
-    except requests.exceptions.RequestException:
-        st.warning("Ubuntu veri köprüsü (port 8000) bekleniyor...")
+        with open("alarms.json", "r") as f:
+            alarmlar = json.load(f)
+            
+        if alarmlar:
+            for alarm in reversed(alarmlar[-10:]):
+                kaynak = alarm.get('kaynak', 'Bilinmiyor')
+                durum = alarm.get('durum', alarm.get('type', ''))
+                
+                # Başarılı girişleri (sisteme sızılma) yeşil, başarısız denemeleri kırmızı göster
+                if durum == 'Başarılı' or durum == 'INFO':
+                    st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                else:
+                    st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+        else:
+            st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
+            
+    except FileNotFoundError:
+        st.warning("alarms.json dosyası bekleniyor...")
+    except json.JSONDecodeError:
+        st.warning("Loglar okunurken hata oluştu.")
 
     time.sleep(5)
     st.rerun()
