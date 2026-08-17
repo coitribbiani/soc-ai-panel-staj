@@ -41,7 +41,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
         if response.status_code == 200:
             alarmlar = response.json()
             if alarmlar:
-                for alarm in reversed(alarmlar[-10:]):
+                for alarm in reversed(alarmlar[-50:]):
                     kaynak = alarm.get('kaynak', 'Bilinmiyor')
                     
                     # Logdan type bilgisini çekiyoruz (Yoksa boş döner)
