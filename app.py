@@ -48,7 +48,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                     alarm_tipi = alarm.get('type', '')
                     
                     if alarm_tipi == 'INFO':
-                        if kaynak.lower() == 'portal' or kaynak.lower() == 'web':
+                        if 'portal' in kaynak.lower() or 'web' in kaynak.lower():
                             st.success(f"**🟢 Başarılı Portal Girişi:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Hedef:** {kaynak}")
                         else:
                             st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
