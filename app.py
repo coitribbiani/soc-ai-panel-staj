@@ -51,14 +51,14 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                         if 'portal' in kaynak.lower() or 'web' in kaynak.lower():
                             st.success(f"**🟢 Başarılı Portal Girişi:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Hedef:** {kaynak}")
                         else:
-                            st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                            st.success(f"**🟢 KRİTİK: SİSTEME SIZILDI! (Başarılı Oturum)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
                     elif alarm_tipi == 'FAILED_LOGIN':
-                        st.warning(f"**🟠 Hatalı Giriş Denemesi (Tekil):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                        st.warning(f"**🟠 Hatalı Giriş Denemesi (Tekil):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
                     elif alarm_tipi == 'BRUTE_FORCE':
-                        st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                        st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Kritik Risk')}")
                     else:
                         # Eski loglar veya beklenmeyen formatlar için varsayılan durum
-                        st.error(f"**🔴 Tanımlanamayan Tehdit Algılandı:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak}")
+                        st.error(f"**🔴 Tanımlanamayan Tehdit Algılandı:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
             else:
                 st.info("Sistem dinleniyor, henüz bir saldırı kaydedilmedi.")
     except requests.exceptions.RequestException:
