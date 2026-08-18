@@ -130,7 +130,7 @@ elif sekme == "📂 Geçmiş AI Alarmları":
 
             html_icerik += f'<div style="{anim_stil} background-color: rgba(255, 75, 75, 0.1); border-left: 5px solid {bildirim["renk"]}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">\n'
             html_icerik += f'<div style="font-weight: bold; font-size: 15px; margin-bottom: 5px;">{bildirim["ikon"]} ALARM TESPİT EDİLDİ!{yeni_etiket_html}</div>\n'
-            html_icerik += f'<div style="font-size: 14px;"><strong>Saldırgan IP:</strong> <code>{bildirim["ip"]}</code> | <strong>Risk Skoru:</strong> {bildirim["skor"]} ({bildirim["seviye"]}) | <strong>Saldırı Hızı:</strong> {bildirim["hiz"]} deneme/dk</div>\n'
+            html_icerik += f'<div style="font-size: 14px;"><strong>Saldırgan IP:</strong> <code>{bildirim["ip"]}</code> | <strong>AI Kararı:</strong> {bildirim["seviye"]} Risk (Skor: {bildirim["skor"]}) | <strong>Saldırı Hızı:</strong> {bildirim["hiz"]} deneme/dk</div>\n'
             html_icerik += '</div>\n'
             
         html_icerik += '</div>'
