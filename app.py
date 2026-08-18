@@ -37,7 +37,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
     
     # Ngrok üzerinden veriyi çekiyoruz
     try:
-        response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", timeout=3)
+        response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", headers={"ngrok-skip-browser-warning": "true"}, timeout=3)
         if response.status_code == 200:
             alarmlar = response.json()
             if alarmlar:
