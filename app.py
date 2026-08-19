@@ -58,6 +58,8 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                         st.success(f"**🟢 SİSTEME SIZILDI! (Başarılı Giriş)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
                     elif alarm_tipi == 'BRUTE_FORCE':
                         st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Kritik Risk')}")
+                    elif alarm.get("type") == "COMMAND_EXECUTED":
+                        st.info(f"💻 Komut Çalıştırıldı:\nIP: {alarm.get('ip')} | Komut: {alarm.get('password')} | Hedef: {alarm.get('kaynak')}")
                     else:
                         # Eski loglar veya beklenmeyen formatlar için varsayılan durum
                         st.error(f"**🔴 Tanımlanamayan Tehdit Algılandı:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
