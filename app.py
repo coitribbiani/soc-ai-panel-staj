@@ -55,7 +55,7 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                     elif alarm_tipi == 'FAILED_LOGIN':
                         st.warning(f"**🟠 Hatalı Giriş Denemesi (Tekil):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
                     elif alarm_tipi == 'SUCCESSFUL_LOGIN':
-                        st.success(f"**🟢 SİSTEME SIZILDI! (Başarılı Giriş)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
+                        st.error(f"**🚨 KRİTİK UYARI: SİSTEME SIZILDI! (Başarılı Giriş)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
                     elif alarm_tipi == 'BRUTE_FORCE':
                         st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Kritik Risk')}")
                     elif alarm.get("type") == "COMMAND_EXECUTED":
