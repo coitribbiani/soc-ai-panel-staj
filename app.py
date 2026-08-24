@@ -108,7 +108,7 @@ elif sekme == "🌍 Saldırı Haritası":
         # Yerel IP'ler için varsayılan koordinat (İstanbul)
         if ip.startswith("192.168.") or ip.startswith("10.") or ip.startswith("172.") or ip.startswith("127."):
                 return 41.0082, 28.9784
-            try:
+        try:
             res = requests.get(f"http://ip-api.com/json/{ip}").json()
         if res.get("status") == "success":
                 return res["lat"], res["lon"]
