@@ -57,7 +57,34 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                     elif alarm_tipi == 'SUCCESSFUL_LOGIN':
                         st.error(f"**🚨 KRİTİK UYARI: SİSTEME SIZILDI! (Başarılı Giriş)** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
                     elif alarm_tipi == 'BRUTE_FORCE':
-                        st.error(f"**🔴 Brute-Force Tehdidi Algılandı (Başarısız):** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Kritik Risk')}")
+                        st.markdown(f"""
+                            <div style="
+                            background-color: #ffe6e6;
+                            border-left: 8px solid #ff0000;
+                            padding: 15px;
+                            border-radius: 5px;
+                            animation: pulse_red 1.5s infinite;
+                            margin-bottom: 10px;
+                            box-shadow: 0 4px 8px rgba(255,0,0,0.2);
+                            ">
+                            <h4 style="color: #cc0000; margin-top: 0; margin-bottom: 10px;">🚨 KRİTİK ALARM: Brute-Force (Kaba Kuvvet) Saldırısı!</h4>
+                            <div style="font-size: 15px; color: #333;">
+                            <strong>Hedef Sistem:</strong> {kaynak}<br>
+                            <strong>Saldırgan IP:</strong> <code style="color: #ff0000; font-size: 16px;">{alarm.get('ip', '')}</code><br>
+                            <strong>Denenen Kullanıcı / Şifre:</strong> {alarm.get('user', '')} / {alarm.get('password', '')}<br>
+                            <div style="margin-top: 10px;">
+                            <strong>Yapay Zeka Kararı:</strong> <span style="background-color: #ff0000; color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold;">{alarm.get('ai_risk_seviyesi', 'Kritik Risk')}</span>
+                            </div>
+                            </div>
+                            </div>
+                            <style>
+                            @keyframes pulse_red {{
+                            0% {{ box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }}
+                            70% {{ box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }}
+                            100% {{ box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }}
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True)
                     elif alarm.get("type") == "COMMAND_EXECUTED":
                         st.info(f"💻 Komut Çalıştırıldı:\nIP: {alarm.get('ip')} | Komut: {alarm.get('password')} | Hedef: {alarm.get('kaynak')}")
                     else:
