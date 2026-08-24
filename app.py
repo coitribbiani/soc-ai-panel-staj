@@ -3,6 +3,7 @@ import pandas as pd
 import time
 import requests
 import os
+import json
 from PIL import Image
 
 # Sayfa Ayarları
@@ -26,6 +27,7 @@ if df_risk is None:
 # Sol Menü
 sekme = st.sidebar.radio("Analiz Menüsü", [
     "🚨 Canlı Tehdit Akışı", 
+    "🌍 Saldırı Haritası",
     "📂 Geçmiş AI Alarmları", 
     "📊 Risk Skorları", 
     "📈 Analiz Grafikleri",
@@ -43,8 +45,6 @@ if sekme == "🚨 Canlı Tehdit Akışı":
             if alarmlar:
                 for alarm in reversed(alarmlar[-50:]):
                     kaynak = alarm.get('kaynak', 'Bilinmiyor')
-                    
-                    # Logdan type bilgisini çekiyoruz (Yoksa boş döner)
                     alarm_tipi = alarm.get('type', '')
                     
                     if alarm_tipi == 'INFO':
@@ -93,13 +93,49 @@ if sekme == "🚨 Canlı Tehdit Akışı":
                     elif alarm.get("type") == "COMMAND_EXECUTED":
                         st.info(f"💻 Komut Çalıştırıldı:\nIP: {alarm.get('ip')} | Komut: {alarm.get('password')} | Hedef: {alarm.get('kaynak')}")
                     else:
-                        # Eski loglar veya beklenmeyen formatlar için varsayılan durum
                         st.error(f"**🔴 Tanımlanamayan Tehdit Algılandı:** \n\n **IP:** {alarm.get('ip', '')} | **Kullanıcı:** {alarm.get('user', '')} | **Şifre:** {alarm.get('password', '')} | **Hedef:** {kaynak} | **AI Kararı:** {alarm.get('ai_risk_seviyesi', 'Bilinmiyor')}")
     except requests.exceptions.RequestException:
         st.warning("Ubuntu veri köprüsü (Ngrok) bekleniyor...")
 
     time.sleep(5)
     st.rerun()
+
+elif sekme == "🌍 Saldırı Haritası":
+    st.subheader("🌍 Saldırı Konumları (Dünya Haritası)")
+    
+    @st.cache_data
+    def get_lat_lon(ip):
+        try:
+            res = requests.get(f"http://ip-api.com/json/{ip}").json()
+            if res.get("status") == "success":
+                return res["lat"], res["lon"]
+        except:
+            return None, None
+
+    try:
+        response = requests.get("https://autistic-pliable-grueling.ngrok-free.dev/alarms.json", headers={"ngrok-skip-browser-warning": "true"}, timeout=5)
+        if response.status_code == 200:
+            alarmlar = response.json()
+            harita_verisi = []
+            islenen_ipler = set()
+
+            for alarm in alarmlar:
+                ip = alarm.get("ip")
+                if ip and ip != "Bilinmiyor" and ip not in islenen_ipler:
+                    lat, lon = get_lat_lon(ip)
+                    if lat and lon:
+                        harita_verisi.append({"lat": lat, "lon": lon})
+                    islenen_ipler.add(ip)
+
+            if harita_verisi:
+                df_map = pd.DataFrame(harita_verisi)
+                st.map(df_map)
+            else:
+                st.info("Haritada gösterilecek geçerli konum bulunamadı.")
+        else:
+            st.error("Alarmlar dosyasına ulaşılamadı.")
+    except requests.exceptions.RequestException:
+        st.warning("Ubuntu veri köprüsü (Ngrok) bekleniyor...")
 
 elif sekme == "📂 Geçmiş AI Alarmları":
     st.subheader("📂 Geçmiş AI Alarmları (CSV Verisi)")
