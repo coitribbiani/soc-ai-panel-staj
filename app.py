@@ -109,6 +109,7 @@ elif sekme == "🌍 Saldırı Haritası":
             res = requests.get(f"http://ip-api.com/json/{ip}").json()
             if res.get("status") == "success":
                 return res["lat"], res["lon"]
+            return None, None  # <-- Eklenen kısım (başarısız sorgular için)
         except:
             return None, None
 
