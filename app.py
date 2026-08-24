@@ -105,11 +105,14 @@ elif sekme == "🌍 Saldırı Haritası":
     
     @st.cache_data
     def get_lat_lon(ip):
-        try:
+        # Yerel IP'ler için varsayılan koordinat (İstanbul)
+        if ip.startswith("192.168.") or ip.startswith("10.") or ip.startswith("172.") or ip.startswith("127."):
+            return 41.0082, 28.9784
+            try:
             res = requests.get(f"http://ip-api.com/json/{ip}").json()
             if res.get("status") == "success":
                 return res["lat"], res["lon"]
-            return None, None  # <-- Eklenen kısım (başarısız sorgular için)
+            return None, None
         except:
             return None, None
 
