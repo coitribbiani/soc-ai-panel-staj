@@ -127,7 +127,7 @@ elif sekme == "🌍 Saldırı Haritası":
                 ip = alarm.get("ip")
                 if ip and ip != "Bilinmiyor" and ip not in islenen_ipler:
                     lat, lon = get_lat_lon(ip)
-                    if lat and lon:
+                    if lat is not None and lon is not None:
                         harita_verisi.append({"lat": lat, "lon": lon})
                     islenen_ipler.add(ip)
 
